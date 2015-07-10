@@ -38,7 +38,7 @@ int island_seed=0;
 ArrayList<Island> islands;
 
 void setup(){
-   size(600,600); 
+   size(1000 ,700); 
    islands = new ArrayList<Island>();
    islands.add(new Island(TYPE_HOME));
    
@@ -52,43 +52,16 @@ void draw(){
     background(40,40,255);
     fill(30,255,30);
     
-    float dx=target[0]-pan[0];
-    float dy=target[1]-pan[1]; 
-    pan[0]+=dx*pan_speed;
-    pan[1]+=dy*pan_speed;
-    translate((width/2)+pan[0],(height/2)+pan[1]);
-    
-    
-    //println("running...");
-    
-    ////Render the grid
-    int num_x_grids=(width/grid_spacing)-1;
-    for(int i=0; i < (num_x_grids+2); i++){
-      float line_x;
-      
-        line_x=-(width/2)+(grid_spacing*i)-(BigRound(int(pan[0]),grid_spacing))  ;
-        
-     
-      
-      line(line_x, -(height/2)-pan[1], line_x, (height/2)-pan[1]);
-      //text("#"+i+" ("+int(line_x)+")",line_x,-pan[1]+((i-(num_x_grids/2))*20));   
-      textAlign(LEFT);
-      text("#"+i+" ("+int(line_x)+")",-(width/2)-pan[0]+20,(height/2)-pan[1]-13-(i*15));
-    }
+    CalcPan();      // Move the viewport(smoothly)
+    render_grid();  // Render the grid
     
     //Render the islands
     for(int i=0;i < islands.size();i++){
       Island island = islands.get(i); 
       island.display();
-      //island.stats();
     }
     
-    text("pan: ("+int(pan[0])+","+int(pan[1])+")",-(width/2)-pan[0]+20,-(height/2)-pan[1]+13);
-    
-    int X=int((mouseX-(width/2))-pan[0]);
-    int Y=int((mouseY-(height/2))-pan[1]);
-    textAlign(CENTER);
-    text("("+X+","+Y+")", X , Y );
+  // render_debugOverlay();  //Render any debugging text.
 }
 
 void mousePressed(){
@@ -103,13 +76,11 @@ void mousePressed(){
 
 void mouseMoved(){
     //TODO Island highlighting and tooltips
-  
-  
 }
 
 void keyPressed(){
    if(key==CODED){
-     if(keyCode==36){
+     if(keyCode==36){//Home key returns viewport to origin.
        target[0]=0;
        target[1]=0;
      }
@@ -117,9 +88,7 @@ void keyPressed(){
      if(keyCode==DOWN){target[1]-=10;}
      if(keyCode==RIGHT){target[0]-=10;}
      if(keyCode==LEFT){target[0]+=10;}
-   
- }
-  
+  }
 }
 
 
