@@ -63,17 +63,18 @@ void draw(){
     
     ////Render the grid
     int num_x_grids=(width/grid_spacing)-1;
-    for(int i=0; i < num_x_grids; i++){
+    for(int i=0; i < (num_x_grids+2); i++){
       float line_x;
-      if(i==0){
-        line_x=0-pan[0];
-      }else{
-        line_x=(pan[0]-((grid_spacing*i)));
-      }
       
-      line(line_x, -(width/2)-pan[1], line_x, (width/2)-pan[1]);
-      text("#"+i+" ("+int(line_x)+")",line_x,-pan[1]+((i-(num_x_grids/2))*20));   }
-    
+        line_x=-(width/2)+(grid_spacing*i)-(BigRound(int(pan[0]),grid_spacing))  ;
+        
+     
+      
+      line(line_x, -(height/2)-pan[1], line_x, (height/2)-pan[1]);
+      //text("#"+i+" ("+int(line_x)+")",line_x,-pan[1]+((i-(num_x_grids/2))*20));   
+      textAlign(LEFT);
+      text("#"+i+" ("+int(line_x)+")",-(width/2)-pan[0]+20,(height/2)-pan[1]-13-(i*15));
+    }
     
     //Render the islands
     for(int i=0;i < islands.size();i++){
@@ -81,8 +82,8 @@ void draw(){
       island.display();
       //island.stats();
     }
-    textAlign(LEFT);
-    text("pan: ("+int(pan[0])+","+int(pan[1])+")",-(width/2)-pan[0]+20,-(width/2)-pan[1]+13);
+    
+    text("pan: ("+int(pan[0])+","+int(pan[1])+")",-(width/2)-pan[0]+20,-(height/2)-pan[1]+13);
     
     int X=int((mouseX-(width/2))-pan[0]);
     int Y=int((mouseY-(height/2))-pan[1]);
@@ -112,8 +113,8 @@ void keyPressed(){
        target[0]=0;
        target[1]=0;
      }
-     if(keyCode==UP){target[1]-=10;}
-     if(keyCode==DOWN){target[1]+=10;}
+     if(keyCode==UP){target[1]+=10;}
+     if(keyCode==DOWN){target[1]-=10;}
      if(keyCode==RIGHT){target[0]-=10;}
      if(keyCode==LEFT){target[0]+=10;}
    
