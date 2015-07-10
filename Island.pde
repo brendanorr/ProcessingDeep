@@ -18,6 +18,7 @@ class Island {
                                //  3: A distance away
                                //  4: Far away (outline barely visible)
                                //  5: Very far away (just a speck on the screen) 
+   float   island_size;                            
    boolean hasYucca=false;      //Has harvestable yucca plants on the island
    boolean hasPotato=false;     //Has harvestable potatoe plants on the island
    boolean hasTrees=true;       //Has uncut trees on the island
@@ -40,12 +41,14 @@ class Island {
     if(dist>5){dist=5;}
     if(dist<0){dist=0;}
     distance[0]=dist;
+    island_size=home_size*sub_island_scale;
     println("Island created.\n\torigin given: "+origin+" (normalized: "+destinations[0]+")\n\tdistance given:"+dist+" (normalized: "+distance[0]+")");
     stats();
   }
   
   Island(int my_type){
     if(my_type!=0){my_type=-1;}
+    island_size=home_size;
     
     type=my_type;
   }
@@ -73,7 +76,7 @@ class Island {
   
   void display(){
      int[] xy =getCartesian();
-     ellipse(xy[0],xy[1],scale*30,scale*30);
+     ellipse(xy[0],xy[1],scale*island_size,scale*island_size);
   }
   
   void stats(){
