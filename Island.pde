@@ -50,6 +50,32 @@ class Island {
     type=my_type;
   }
   
+  void render(){
+    
+  }
+  
+  void select(){
+  }
+  
+  void addNeighbor(int direction){
+  }
+  
+  void delNeightbor(int direction){
+  }
+  
+  int[] getCartesian(){
+    int x=0;
+    int y=0;
+    int[]  coords={x,y};
+    return coords;
+    
+  }
+  
+  void display(){
+     int[] xy =getCartesian();
+     ellipse(xy[0],xy[1],scale*30,scale*30);
+  }
+  
   void stats(){
     print("Island info:\n\tType: ("+type);
     switch(type){

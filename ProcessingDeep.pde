@@ -21,31 +21,43 @@ import toxi.geom.*;
 ///// Static variables //////
 float sub_island_scale=0.50;  // Scale offset from the home island.
 float home_size=30;
+float pan_speed=1.01;
 
 
 ///// Runtime variables /////
-int pan_x=0;            // X offset of islands
-int pan_y=0;            // Y offset of islands
+int[]pan    ={0,0};
+int[]target ={0,0};
 float scale=1.0;              // Zoom of the island.
 int current_island=0;
+int island_seed=0;
 
-Island[]   island= new Island[1];
+ArrayList<Island> islands;
 
 void setup(){
    size(600,600); 
-   island[1]=new Island(TYPE_HOME);
+   islands = new ArrayList<Island>();
+   islands.add(new Island(TYPE_HOME));
    
 }
 
 void draw(){
     background(40,40,255);
-    translate((width/2)+pan_x,(height/2)+pan_y);
+    pan[0]=int(((pan[0]*2)+target[0])/3);
+    pan[1]=int(((pan[1]*2)+target[1])/3);
+    translate((width/2)+pan[0],(height/2)+pan[1]);
     fill(30,255,30);
-    println("running...");
-    for(int i=0;i < island.length;i++){
-      island[i].stats();
+    //println("running...");
+    for(int i=0;i < islands.size();i++){
+      Island island = islands.get(i); 
+      island.display();
+      //island.stats();
     }
-    delay(10000);
 }
 
-
+void mousePressed(){
+     //TODO: Check to see if mouse click is on an island 
+     target[0]=(width/2)-mouseX;
+     target[1]=(height/2)-mouseY;
+     println("mousePressed():\n\tpan[0]="+pan[0]+", pan[1]="+pan[1]+"\n\ttarget[0]="+target[0]+",target[1]="+target[1]);
+     println("\twindow:  width="+width+"\theight="+height);
+}
