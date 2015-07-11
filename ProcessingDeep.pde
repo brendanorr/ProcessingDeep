@@ -27,6 +27,8 @@ float home_size=30;
 float pan_speed=0.05;
 int  grid_spacing=100; 
 
+boolean debugMode=true;
+
 
 ///// Runtime variables /////
 float[]pan    ={0.0,0.0};
@@ -38,7 +40,7 @@ int island_seed=0;
 ArrayList<Island> islands;
 
 void setup(){
-   size(1000 ,700); 
+   size(1000 ,1000); 
    islands = new ArrayList<Island>();
    islands.add(new Island(TYPE_HOME));
    
@@ -49,8 +51,9 @@ void setup(){
 }
 
 void draw(){
-    background(40,40,255);
-    fill(30,255,30);
+    background(water);
+    fill(255);
+    stroke(255,255,255,0);
     
     CalcPan();      // Move the viewport(smoothly)
     render_grid();  // Render the grid
@@ -59,38 +62,92 @@ void draw(){
     for(int i=0;i < islands.size();i++){
       Island island = islands.get(i); 
       island.display();
+      if(island.isMouseOver()){
+          island.hovered(true);
+      }
+      else{
+          island.hovered(false);
+      }
     }
     
-  // render_debugOverlay();  //Render any debugging text.
+   if(debugMode){render_debugOverlay();}  //Render any debugging text.
 }
 
 void mousePressed(){
-     //TODO: Check to see if mouse click is on an island     
-     int X=(mouseX-(width/2));
-     int Y=(mouseY-(height/2));
-     target[0]=pan[0]-X;
-     target[1]=pan[1]-Y;
-     println("mousePressed():\n\tpan[0]="+pan[0]+", pan[1]="+pan[1]+"\n\ttarget[0]="+target[0]+",target[1]="+target[1]);
-     println("\twindow:  width="+width+"\theight="+height);
-}
-
-void mouseMoved(){
-    //TODO Island highlighting and tooltips
+     //TODO: Check to see if mouse click is on an island    
+    switch(mouseButton){
+      case LEFT:
+       int X=(mouseX-(width/2));
+       int Y=(mouseY-(height/2));
+       boolean isOverIsland=false;
+       for(int i=0;i < islands.size();i++){
+          Island island = islands.get(i); 
+          if(island.isMouseOver()){
+              island.selected(true);
+              isOverIsland=true;
+              target=float(island.getCartesian());
+              target[0]*=-1;
+              target[1]*=-1;
+          }
+          else{
+              if(isOverIsland){
+                island.selected(false);
+              }
+          }
+          if(!isOverIsland){
+            target[0]=pan[0]-X;
+            target[1]=pan[1]-Y;
+          }
+        }
+       break;
+      case CENTER:
+       scale=1.0;
+       break;
+      case RIGHT:
+        for(int i=0;i < islands.size();i++){
+          Island island = islands.get(i); 
+          island.selected(false);          
+        }
+       break; 
+     
+    } 
 }
 
 void keyPressed(){
    if(key==CODED){
-     if(keyCode==36){//Home key returns viewport to origin.
-       target[0]=0;
-       target[1]=0;
+     switch(keyCode){
+        case 36:
+          target[0]=0;
+          target[1]=0;
+          break;
+        case UP:
+          target[1]+=50*scale;
+          break;
+        case DOWN:
+          target[1]-=50*scale;
+          break;
+        case LEFT:
+          target[0]-=50*scale;
+          break;
+        case RIGHT:
+          target[0]+=50*scale;
+          break;
      }
-     if(keyCode==UP){target[1]+=10;}
-     if(keyCode==DOWN){target[1]-=10;}
-     if(keyCode==RIGHT){target[0]-=10;}
-     if(keyCode==LEFT){target[0]+=10;}
   }
 }
 
+void mouseWheel(MouseEvent event){
+   int evt=event.getCount();
+   switch(evt){
+     case -1:
+       scale+=0.1;
+       break;
+     case 1:
+       scale-=0.1;
+       break; 
+   }
+  
+};
 
 
 

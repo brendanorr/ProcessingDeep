@@ -16,4 +16,5 @@ void CalcPan(){
     pan[0]+=dx*pan_speed;
     pan[1]+=dy*pan_speed;
     translate((width/2)+pan[0],(height/2)+pan[1]);
+    
 }
