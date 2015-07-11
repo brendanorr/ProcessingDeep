@@ -13,12 +13,14 @@ public static final byte FEATURE_SHIP=           -125;
 class Island {
    int[] destinations={0};      //Degrees to an island/object
    int[] distance={0};          //Distance from island 1..5
+   int[] xy={300,50};
                                //  1: Very close, beach visible
                                //  2: Somewhat close
                                //  3: A distance away
                                //  4: Far away (outline barely visible)
                                //  5: Very far away (just a speck on the screen) 
-   float   island_size;                            
+   float   island_size;          
+   String name;   
    boolean hasYucca=false;      //Has harvestable yucca plants on the island
    boolean hasPotato=false;     //Has harvestable potatoe plants on the island
    boolean hasTrees=true;       //Has uncut trees on the island
@@ -33,7 +35,11 @@ class Island {
                                 //  98:Water Fort
                                 //  99: UFO
                                 //  100:Bouy
-
+   // Application statuses:
+   boolean isFocused=false;     // Has user clicked on object
+   boolean isHovered=false;     // Is user's mouse over object
+   boolean isDragging=false;    // Is the users mouse dragging object.
+   color islandColor=color(0);
                                 
   
   Island(int type,int origin,int dist){
@@ -42,6 +48,7 @@ class Island {
     if(dist<0){dist=0;}
     distance[0]=dist;
     island_size=home_size*sub_island_scale;
+    name="Unnamed";
     println("Island created.\n\torigin given: "+origin+" (normalized: "+destinations[0]+")\n\tdistance given:"+dist+" (normalized: "+distance[0]+")");
     stats();
   }
@@ -49,34 +56,78 @@ class Island {
   Island(int my_type){
     if(my_type!=0){my_type=-1;}
     island_size=home_size;
-    
+    name="Home";
     type=my_type;
   }
   
-  void render(){
-    
+  boolean isMouseOver(){
+    if(
+    ((width/2)+pan[0]-mouseX) >= (-xy[0]-scale*(island_size/2)) 
+    &&
+    ((width/2)+pan[0]-mouseX)<=(-xy[0]+scale*(island_size/2))
+    &&
+    ((height/2)+pan[1]-mouseY) >= (-xy[1]-scale*(island_size/2)) 
+    &&
+    ((height/2)+pan[1]-mouseY)<=(-xy[1]+scale*(island_size/2))
+    ){
+      return true;
+    }
+    else{    
+      return false;
+    }
   }
   
-  void select(){
+  void selected(boolean status){
+    if(status){
+      isFocused=true;
+      islandColor=island_focused;
+    }
+    else{
+      isFocused=false;
+      islandColor=island_normal;
+    }
   }
   
-  void addNeighbor(int direction){
+  void hovered(boolean status){
+    if(status&&!isFocused){
+      islandColor=island_hover;
+      isHovered=true;
+    }
+    else{
+      islandColor=island_normal;
+      isHovered=false;
+    }
   }
   
-  void delNeightbor(int direction){
-  }
+  void addNeighbor(int direction){}
+  
+  void delNeightbor(int direction){}
   
   int[] getCartesian(){
-    int x=0;
-    int y=0;
-    int[]  coords={x,y};
-    return coords;
-    
+    updateCoords();
+    return xy;
   }
   
+  void updateCoords(){}
+  
   void display(){
-     int[] xy =getCartesian();
+     fill(islandColor);
      ellipse(xy[0],xy[1],scale*island_size,scale*island_size);
+     fill(text_label);
+     text(name, xy[0]+(scale*island_size)/2,xy[1]+(scale*island_size)/2);
+     if(debugMode){
+        int line_num=1;
+        text("xy[]: {"+xy[0]+","+xy[1]+"}", (xy[0]+(scale*island_size)/2)+15,xy[1]+((scale*island_size)/2)+(line_num++*15));
+        text("island_size: "+island_size, (xy[0]+(scale*island_size)/2)+15,xy[1]+((scale*island_size)/2)+(line_num++*15));
+        text("type: "+type, (xy[0]+(scale*island_size)/2)+15,xy[1]+((scale*island_size)/2)+(line_num++*15));
+        if(isFocused){
+          text("Focused", (xy[0]+(scale*island_size)/2)+15,xy[1]+((scale*island_size)/2)+(line_num++*15));
+        }
+        if(isHovered){
+          text("Hovered", (xy[0]+(scale*island_size)/2)+15,xy[1]+((scale*island_size)/2)+(line_num++*15));
+        }
+        
+     }
   }
   
   void stats(){
