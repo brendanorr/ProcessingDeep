@@ -5,6 +5,7 @@
 */
 
 public static int[] VERSION={0,1,0};  // Major.Minor.Release
+boolean debugMode=true;
 
 //import toxi.math.conversion.*;
 import toxi.geom.*;
@@ -27,7 +28,6 @@ float home_size=30;
 float pan_speed=0.05;
 int  grid_spacing=100; 
 
-boolean debugMode=true;
 
 
 ///// Runtime variables /////
@@ -40,15 +40,17 @@ String file_name="";
 
 ArrayList<Island> islands;
 
+
 void setup(){
-   size(550 ,550); 
+   if(debugMode){println("ProcessingDeep\nsetup()");}
+   size(600 ,600); 
    islands = new ArrayList<Island>();
    islands.add(new Island(TYPE_HOME));
    
    font=createFont("DejaVuSansMono-12.vlw",12);
    textFont(font);
    textAlign(CENTER);
-   loadData(filename);
+   loadData(file_name);
 }
 
 void draw(){
@@ -63,7 +65,7 @@ void draw(){
     for(int i=0;i < islands.size();i++){
       Island island = islands.get(i); 
       island.display();
-      if(island.isMouseOver()){
+      if(island.isMouseOver(mouseX,mouseY)){
           island.hovered(true);
       }
       else{
@@ -75,17 +77,20 @@ void draw(){
 }
 
 void mousePressed(){
+    if(debugMode){print("\tmousePressed()\tmouseButton="+mouseButton);}
      //TODO: Check to see if mouse click is on an island    
     switch(mouseButton){
       case LEFT:
        int X=(mouseX-(width/2));
        int Y=(mouseY-(height/2));
+       if(debugMode){print("(LEFT), mouseX="+mouseX+", mouseY="+mouseY+", X="+X+", Y="+Y);}
        boolean isOverIsland=false;
        for(int i=0;i < islands.size();i++){
           Island island = islands.get(i); 
-          if(island.isMouseOver()){
+          if(island.isMouseOver(mouseX,mouseY)){
               island.selected(true);
               isOverIsland=true;
+              if(debugMode){print("\n");}
               target=float(island.getCartesian());
               target[0]*=-1;
               target[1]*=-1;
@@ -98,23 +103,28 @@ void mousePressed(){
           if(!isOverIsland){
             target[0]=pan[0]-X;
             target[1]=pan[1]-Y;
+            if(debugMode){println(", target=["+target[0]+","+target[1]+"]");}
           }
         }
        break;
       case CENTER:
        scale=1.0;
+       if(debugMode){println("(CENTER), mouseX="+mouseX+", mouseY="+mouseY+", scale=1.0");}
        break;
       case RIGHT:
         for(int i=0;i < islands.size();i++){
           Island island = islands.get(i); 
           island.selected(false);          
         }
+        if(debugMode){println("(RIGHT), mouseX="+mouseX+", mouseY="+mouseY);}
        break; 
      
     } 
+    
 }
 
 void keyPressed(){
+  if(debugMode){println("\tkeyPressed()\tkey="+key+", keyCode="+keyCode);}
    if(key==CODED){
      switch(keyCode){
         case 36:
@@ -143,7 +153,7 @@ void keyPressed(){
           loadData(file_name);
           break;
         default:
-          println("unhandled coded keyPressed(): "+keyCode);
+          println("\t\tunhandled coded keyPressed()");
           break;
      }
   }
@@ -159,8 +169,7 @@ void mouseWheel(MouseEvent event){
        scale-=0.1;
        break; 
    }
-  
-};
+}
 
 
 

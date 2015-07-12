@@ -19,14 +19,17 @@ void CalcPan(){
 }
 
 boolean loadData(String tFileName){
+   if(debugMode){println("\tloadData() ***STUB***");}
   return true;
 }
 
 boolean saveData(String tFileName){
   String[] outData= new String[islands.size()+1];
-  outData[0]=island_seed+"\t"+pan[0]+"\t"+pan[1]+"\t"+scale+"\t"+current_island;
+  outData[0]=island_seed+"\t"+int(pan[0])+"\t"+int(pan[1])+"\t"+scale+"\t"+current_island;
+  if(debugMode){println("\tsaveData()\n\t\t\t\t<--- "+outData[0]);}
   for(int i=0; i < islands.size();i++){
-      Island island = islands.get(i+1);
+      if(debugMode){print("\t");}
+      Island island = islands.get(i);
       outData[i+1]=island.exportData();
   }
   return true;  

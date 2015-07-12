@@ -3,7 +3,7 @@ color text_debug=color(0,255,0);
 color text_label=color(255);
 
 color island_normal=color(30,128,30);
-color island_hover=color(30,255,30);
+color island_hover=color(30,200,30);
 color island_focused=color(90,255,90);
 
 color grid_x  = color(255,255,255,64);
@@ -11,6 +11,8 @@ color grid_y  = color(255,255,255,64);
 
 
 void render_grid(){
+    // TODO:  render_grid() doesn't handle grid_spacing that isn't a factor of the width or height  
+  
     // Vertical
     stroke(grid_x);
     for(int i=0; i < ((width/grid_spacing)+1); i++){
