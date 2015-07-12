@@ -13,7 +13,7 @@ public static final byte FEATURE_SHIP=           -125;
 class Island {
    int[] destinations={0};      //Degrees to an island/object
    int[] distance={0};          //Distance from island 1..5
-   int[] xy={300,50};
+   int[] xy={0,0};
                                //  1: Very close, beach visible
                                //  2: Somewhat close
                                //  3: A distance away
@@ -130,45 +130,11 @@ class Island {
      }
   }
   
-  void stats(){
-    print("Island info:\n\tType: ("+type);
-    switch(type){
-      case TYPE_HOME:
-        print(") Home Island");
-        break;
-      case TYPE_ISLAND:
-        print(") Regular Island");
-        break;
-      case TYPE_FORT:
-        print(") Sea Fort");
-        break;
-      case TYPE_UFO:
-        print(") UFO (underwater)");
-        break;
-      case TYPE_BOUY:
-        print(") Bouy");
-        break;
-      case TYPE_UNKNOWN:
-      default:
-        print(") UNKNOWN");
-        break;
-    }
-    print("\n\t"+destinations.length+"\tneighboring islands\n\t");
-    if(explored){
-      print("has been explored\n\t");
-      if(hasYucca){print("has harvestable Yucca plants\n\t");}
-        else{print("does NOT have harvestable Yucca plants\n\t");}
-      if(hasPotato){print("has harvestable Potato plants\n\t");}
-        else{print("does NOT have harvestable Potato plants\n\t");}
-    }
-      else{print("has NOT been explored\n\t");}
-    if(hasTrees){print("palms have NOT been deforested\n\t");}
-      else{print("palms have been deforested\n\t");}
-    if(hasWreckages){print("has wreckages to loot\n\t");}
-      else{print("does NOT have wreckages to loot\n\t");}
-    
-    
-    
-  }
+String[] exportData(){
+  String outData = {name,type,island_size};
+  return outData;
+}
+
+void importData(){
   
 }

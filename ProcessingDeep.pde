@@ -36,18 +36,19 @@ float[]target ={0.0,0.0};
 float scale=1.0;              // Zoom of the island.
 int current_island=0;
 int island_seed=0;
+String file_name="";
 
 ArrayList<Island> islands;
 
 void setup(){
-   size(1000 ,1000); 
+   size(550 ,550); 
    islands = new ArrayList<Island>();
    islands.add(new Island(TYPE_HOME));
    
    font=createFont("DejaVuSansMono-12.vlw",12);
    textFont(font);
    textAlign(CENTER);
-   
+   loadData(filename);
 }
 
 void draw(){
@@ -131,6 +132,18 @@ void keyPressed(){
           break;
         case RIGHT:
           target[0]+=50*scale;
+          break;
+        case 112: //F1
+          // Show help
+          break;
+        case 113: //F2: Save
+          saveData(file_name);
+          break;
+        case 114: //F3: (re)Load
+          loadData(file_name);
+          break;
+        default:
+          println("unhandled coded keyPressed(): "+keyCode);
           break;
      }
   }
